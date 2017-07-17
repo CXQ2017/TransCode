@@ -49,12 +49,13 @@ public class EnterpriseTransToPlayTread extends Thread {
 		HandleProperties propHandle = new HandleProperties(confFile);
 		DBManager dbManger = new DBManager();
 		ResultSet rs;
-		this.lastId = propHandle.GetValueByKey("lastId");
-		if(this.lastId == null){
-			this.lastId = "0";
-		}
+//		this.lastId = propHandle.GetValueByKey("lastId");
+//		if(this.lastId == null){
+//			this.lastId = "0";
+//		}
 		do {
-			String sql = "SELECT * FROM upload_log where material_id=-1 and log_id >" +this.lastId;
+			//根据trans_status转码
+			String sql = "SELECT * FROM upload_log where material_id=-1 and play_status = 0";
 			//material_id = -1 表示是企业上传媒资
 			rs = dbManger.executeQuery(sql);
 			try {
@@ -62,22 +63,30 @@ public class EnterpriseTransToPlayTread extends Thread {
 					this.lastId = rs.getInt("log_id")+"";
 					String source = rs.getString("video_upload_path");
 					String destination = rs.getString("video_play_path");
+					
 					if (!mediaTool.convertContainer(source, destination)) {
 						continue;
 					}
+					
+					String updateSql = "UPDATE upload_log SET "
+							+  "play_status = 1 where log_id = " + lastId;
+//					System.out.println(updateSql);
+					dbManger.executeUpdate(updateSql);
+
 				}
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}finally{
-				try {
-					propHandle.WriteProperties("lastId", this.lastId);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
 			}
+//			finally{
+//				try {
+//					propHandle.WriteProperties("lastId", this.lastId);
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//
+//			}
 			
 			try {
 				sleep(10 * 1000);

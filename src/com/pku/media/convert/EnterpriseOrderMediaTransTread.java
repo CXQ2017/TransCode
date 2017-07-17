@@ -70,7 +70,7 @@ public class EnterpriseOrderMediaTransTread extends Thread {
 					if (!sourceFile.exists() || sourceFile.isDirectory()){
 						continue;
 					}
-					String orderFilePath = downLoadDir+"order"+orderid;
+					String orderFilePath = downLoadDir+"/order"+orderid;
 					File orderFile = new File(orderFilePath);
 					orderFile.mkdir();
 					String outFile = orderFilePath+"/"
