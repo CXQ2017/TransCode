@@ -4,7 +4,6 @@
  */
 package com.pku.media.convert;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -63,7 +62,6 @@ public class EnterpriseTransToPlayTread extends Thread {
 					this.lastId = rs.getInt("log_id")+"";
 					String source = rs.getString("video_upload_path");
 					String destination = rs.getString("video_play_path");
-					
 					if (!mediaTool.convertContainer(source, destination)) {
 						continue;
 					}
@@ -72,7 +70,6 @@ public class EnterpriseTransToPlayTread extends Thread {
 							+  "play_status = 1 where log_id = " + lastId;
 //					System.out.println(updateSql);
 					dbManger.executeUpdate(updateSql);
-
 				}
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
